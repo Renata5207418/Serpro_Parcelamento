@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Serpro - Envio DAS</title>
+    <link rel="stylesheet" href="/static/css/index.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/imask/6.2.2/imask.min.js"></script>
+</head>
+<body>
+    <!-- Menu Lateral -->
+    <div id="sidebar" class="d-flex flex-column p-3">
+        <h4 class="text-center">Menu</h4>
+        <hr>
+        <ul class="nav flex-column">
+            <li class="nav-item">
+                <a href="/" class="nav-link"><i class="fas fa-upload me-2"></i>Envio de DAS</a>
+            </li>
+            <li class="nav-item">
+                <a href="/consulta" class="nav-link"><i class="fas fa-search me-2"></i>Consulta de DAS</a>
+            </li>
+            <li class="nav-item">
+                <a href="/logout" class="nav-link"><i class="fas fa-sign-out-alt me-2"></i>Sair</a>
+            </li>
+        </ul>
+    </div>
+
+    <!-- Conteúdo Principal -->
+    <div id="content" class="container-fluid">
+        <div class="text-center mt-4">
+            <img src="/static/images/logo.png" alt="Logo Sistema" class="img-fluid mb-4" style="max-width: 130px;">
+            <h1>Envio de DAS</h1>
+
+            <!-- Alerta de sucesso, inicialmente escondido -->
+            <div class="alert alert-success" role="alert" id="successMessage">
+                Envio realizado com sucesso!
+            </div>
+
+            <form id="dasForm" class="text-start w-75 mx-auto">
+                <!-- Informações do Contribuinte -->
+                <fieldset class="border p-4 mb-4">
+                    <legend class="w-auto px-2">Informações do Contribuinte</legend>
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="contribuinte" class="form-label">Código do Contribuinte</label>
+                            <input type="text" class="form-control form-control-sm" id="contribuinte" name="contribuinte" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="tipo_contribuinte" class="form-label">Tipo do Contribuinte</label>
+                            <select class="form-select form-select-sm" id="tipo_contribuinte" name="tipo_contribuinte" required>
+                                <option value="1">CPF</option>
+                                <option value="2">CNPJ</option>
+                            </select>
+                        </div>
+                    </div>
+                </fieldset>
+
+                <!-- Informações do Sistema -->
+                <fieldset class="border p-4 mb-4">
+                    <legend class="w-auto px-2">Informações do Sistema</legend>
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="id_sistema" class="form-label">ID do Sistema</label>
+                            <select class="form-control form-control-sm" id="id_sistema" name="id_sistema" onchange="updateServicoOptions()" required>
+                                <option value="">Selecione uma modalidade...</option>
+                                <option value="PARCSN">PARCSN-(Parcelamento Simples Nacional)</option>
+                                <option value="PARCSN-ESP">PARCSN ESPECIAL-(Parcelamento Simples Nacional Especial)</option>
+                                <option value="PERTSN">PERTSN-(Programa Especial de Regularização Tributária Simples Nacional)</option>
+                                <option value="RELPSN">RELPSN-(Relatório Simples Nacional)</option>
+                                <option value="PARCMEI">PARCMEI-(Parcelamento MEI Especial)</option>
+                                <option value="PARCMEI-ESP">PARCMEI ESPECIAL-(Programa Especial de Regularização Tributária MEI)</option>
+                                <option value="PERTMEI">PERTMEI-(Programa Especial de Regularização Tributária MEI)</option>
+                                <option value="RELPMEI">RELPMEI-(Relatório MEI)</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="id_servico" class="form-label">ID do Serviço</label>
+                            <input type="text" class="form-control form-control-sm" id="id_servico" name="id_servico" readonly required>
+                        </div>
+                        <div class="col-md-6 mt-3">
+                            <label for="parcela_para_emitir" class="form-label">Ano e Mês da Parcela para Emitir (AAAAMM)</label>
+                            <input type="text" class="form-control form-control-sm" id="parcela_para_emitir" name="parcela_para_emitir" required>
+                        </div>
+                    </div>
+                </fieldset>
+
+                <!-- Botão de Enviar -->
+                <button type="submit" class="btn btn-warning w-100">Enviar DAS</button>
+            </form>
+        </div>
+        <br>
+          <!-- Formulário de Upload de Planilha -->
+        <form id="batchUploadForm" class="text-start w-75 mx-auto mb-4" enctype="multipart/form-data">
+            <fieldset class="border p-4 mb-4">
+                <legend class="w-auto px-2">Envio em Lote - Upload de Planilha</legend>
+                <div class="mb-3">
+                    <label for="fileUpload" class="form-label">Escolha o arquivo para envio em lote</label>
+                    <input type="file" class="form-control" id="fileUpload" name="fileUpload" accept=".xlsx" required>
+                </div>
+                <!-- Alerta de envio em lote -->
+                <div class="alert alert-info" role="alert" id="batchSuccessMessage" style="display: none;">
+                    Envio em lote em andamento. Por favor, aguarde...
+                </div>
+                <div class="alert alert-secondary" role="alert" id="batchDetailedMessage" style="display: none;">
+                    <!-- Mensagem de resumo do envio -->
+                </div>
+                <button type="submit" class="btn btn-warning w-100" id="batchSubmitButton">Enviar Planilha</button>
+            </fieldset>
+        </form>
+    </div>
+    <br>
+    <!-- Scripts -->
+    <script src="/static/js/index.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

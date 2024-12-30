@@ -1,0 +1,31 @@
+ body {
+            background-color: #bababa;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 10px;
+            padding: 5px;
+        }
+        .container {
+            display: justify;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+        }
+
+        .card {
+            border-radius: 30px;
+            box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.2);
+        }
+        .card-body {
+            padding: 25px;
+        }
+        .logo {
+            display: block;
+            margin: 0 auto 20px;
+        }
+        .password-toggle {
+            cursor: pointer;
+            color: #6c757d;
+        }
